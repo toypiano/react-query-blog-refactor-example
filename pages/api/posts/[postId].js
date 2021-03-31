@@ -36,7 +36,7 @@ async function GET(req, res) {
 
 async function PATCH(req, res) {
   const {
-    query: { postId },
+    query: { postId }, // you can access dynamic routes at req.query
     body,
   } = req
 

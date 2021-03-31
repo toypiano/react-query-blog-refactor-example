@@ -3,6 +3,8 @@ import axios from 'axios'
 
 import { Wrapper, Sidebar, Main } from '../components/styled'
 
+// Next.js uses App component to initialize pages.
+// You can create the custom 'App' component to augment its functionality
 function App() {
   const [activePostId, setActivePostId] = React.useState()
 
@@ -26,7 +28,9 @@ function App() {
   )
 }
 
+// Fetches posts from api then display them
 function Posts({ setActivePostId }) {
+  // Manage data queries
   const [posts, setPosts] = React.useState([])
   const [error, setError] = React.useState()
   const [status, setStatus] = React.useState('loading')
@@ -48,6 +52,7 @@ function Posts({ setActivePostId }) {
     fetchPosts()
   }, [])
 
+  // Also take care of the mutation query
   const [initialValues, setInitialValues] = React.useState({})
   const [mutationStatus, setMutationStatus] = React.useState('idle')
 
@@ -107,6 +112,7 @@ function Posts({ setActivePostId }) {
 }
 
 function Post({ activePostId, setActivePostId }) {
+  // Manage fetch logic inside individual Post component
   const [post, setPost] = React.useState()
   const [error, setError] = React.useState()
   const [status, setStatus] = React.useState('loading')
@@ -134,6 +140,7 @@ function Post({ activePostId, setActivePostId }) {
 
   const [mutationStatus, setMutationStatus] = React.useState('idle')
 
+  // A lot of code duplications....
   const onSubmit = async (values) => {
     try {
       setMutationStatus('loading')
@@ -185,6 +192,7 @@ const defaultFormValues = {
 function PostForm({ onSubmit, initialValues = defaultFormValues }) {
   const [values, setValues] = React.useState(initialValues)
 
+  // set form values
   const setValue = (field, value) =>
     setValues((old) => ({ ...old, [field]: value }))
 

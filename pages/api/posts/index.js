@@ -2,10 +2,8 @@ import shortid from 'shortid'
 import db from '../../../db'
 import { sleep } from '../../../utils'
 
-//
-
 export default async (req, res) => {
-  await sleep(1000)
+  await sleep(1000) // simulate network delay
 
   try {
     if (req.method === 'GET') {
@@ -20,6 +18,9 @@ export default async (req, res) => {
   }
 }
 
+// req.cookies - A cookie object sent by the request. defaults to {}
+// req.query - an object containing query params. defaults to {}
+// req.body - contains the body parsed by `content-type`, or null by default
 async function GET(req, res) {
   const {
     query: { pageOffset, pageSize },
@@ -36,7 +37,8 @@ async function GET(req, res) {
     const page = posts.slice(start, end)
 
     return res.json({
-      items: page,
+      items: page, // contains posts filtered by the pagination query
+      // where the next page should start
       nextPageOffset: posts.length > end ? Number(pageOffset) + 1 : undefined,
     })
   }
@@ -55,7 +57,7 @@ async function POST(req, res) {
     content,
   }
 
-  db.posts.push(row)
+  db.posts.push(row) // you can directly mutate imported object
 
   res.json(row)
 }
