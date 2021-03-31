@@ -39,7 +39,7 @@ function Posts({ setActivePostId }) {
   const onSubmit = async (values) => {
     try {
       await createPost(values)
-      refetch()
+      refetch() // we still need to call refetch after mutation to update queries in the background
     } catch (err) {
       console.error(err)
     }
@@ -101,7 +101,7 @@ function Post({ activePostId, setActivePostId }) {
   const onSubmit = async (values) => {
     try {
       await savePost(values)
-      refetch()
+      refetch() // another refetch after mutation
     } catch (err) {
       console.error(err)
     }
@@ -166,6 +166,7 @@ function Stats({ setActivePostId }) {
 
   const [postId, setPostId] = React.useState()
   const { data: post, status: postStatus, error: postError } = usePost(postId)
+  // no refetch here
 
   return (
     <div>
