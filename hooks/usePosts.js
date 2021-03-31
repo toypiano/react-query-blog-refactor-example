@@ -2,6 +2,7 @@ import React from 'react'
 import axios from 'axios'
 
 export default function usePosts() {
+  // We're creating new instance of state and effect every time we render a component that calls usePosts()
   const [posts, setPosts] = React.useState([])
   const [error, setError] = React.useState()
   const [status, setStatus] = React.useState('loading')

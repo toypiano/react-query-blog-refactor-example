@@ -32,6 +32,7 @@ function App() {
 }
 
 function Posts({ setActivePostId }) {
+  // Replace business logic with custom hook
   const { status, posts, error, refetch } = usePosts()
   const [createPost, createPostStatus] = useCreatePost()
 
@@ -177,6 +178,8 @@ function PostForm({ onSubmit, initialValues = defaultFormValues }) {
 }
 
 function Stats() {
+  // Even though we're using the same custom hook to reuse code, we're not reusing the data itself.
+  // We're double requesting the same data to update stats
   const { posts, status } = usePosts()
   return <div>Total Posts: {status === 'loading' ? '...' : posts.length}</div>
 }
