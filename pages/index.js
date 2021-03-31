@@ -13,6 +13,9 @@ function App() {
   const [activePostId, setActivePostId] = React.useState()
 
   return (
+    // Now wrapping everything inside two Providers that inject global states
+    // Context values are memoized with `useMemo` to prevent rendering all components
+    // Components will only be updated when calling `useContext`
     <PostsContext>
       <PostContext>
         <Wrapper>
@@ -97,6 +100,9 @@ function Posts({ setActivePostId }) {
 }
 
 function Post({ activePostId, setActivePostId }) {
+  // Because now we're keeping all states related to post to a global state (context),
+  // all components that use the same context will be re-rendered at the same time with same behavior.
+  // e.g.) Every component with usePost will show the spinner all at the same time.
   const { status, post, error, refetch } = usePost(activePostId)
   const [savePost, savePostStatus] = useSavePost()
   const [deletePost, deletePostStatus] = useDeletePost()
@@ -165,6 +171,9 @@ function Post({ activePostId, setActivePostId }) {
 function Stats({ setActivePostId }) {
   const { posts, status: postsStatus } = usePosts()
   const [postId, setPostId] = React.useState()
+  // Because postId is changed with every keypress, all the components that calls
+  // usePost will be re-rendered with loading state.
+  // This is a BAD user experience!
   const { post, status: postStatus, error: postError } = usePost(postId)
 
   return (
