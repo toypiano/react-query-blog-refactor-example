@@ -101,6 +101,9 @@ function Post({ activePostId, setActivePostId }) {
 
   const onSubmit = async (values) => {
     try {
+      // this triggers Post and all its descendants to re-render,
+      // but other components that display post will not get re-rendered automatically
+      // unless you call refetch() from that component.
       await savePost(values)
       refetch()
     } catch (err) {
@@ -128,6 +131,7 @@ function Post({ activePostId, setActivePostId }) {
       ) : (
         <div>
           <h3>{post.title}</h3>
+          {/* Now display post id */}
           <small>{post.id}</small>
           <div>
             <p>Post ID: {post.content}</p>
@@ -161,9 +165,9 @@ function Post({ activePostId, setActivePostId }) {
 }
 
 function Stats({ setActivePostId }) {
-  const { posts, status: postsStatus } = usePosts()
+  const { posts, status: postsStatus } = usePosts() // get all posts
   const [postId, setPostId] = React.useState()
-  const { post, status: postStatus, error: postError } = usePost(postId)
+  const { post, status: postStatus, error: postError } = usePost(postId) // get post by id
 
   return (
     <div>
@@ -171,7 +175,7 @@ function Stats({ setActivePostId }) {
       <hr />
       <div>
         <div>
-          Search Post ID:{' '}
+          Search Post ID: {/* request will be made on every change */}
           <input value={postId} onChange={(e) => setPostId(e.target.value)} />
         </div>
         <br />
@@ -180,7 +184,9 @@ function Stats({ setActivePostId }) {
             {postStatus === 'loading' ? (
               <span>Loading...</span>
             ) : postStatus === 'error' ? (
-              <span>Error: {postError.message}</span>
+              // Optional chaining to prevent undefined error
+              // When user is typing fast, postError might become undefined before <span> has time to unmount.
+              <span>Error: {postError?.message}</span>
             ) : (
               <div>
                 <small>Found:</small>
