@@ -13,6 +13,7 @@ function App() {
   const [activePostId, setActivePostId] = React.useState()
 
   return (
+    // Storing global state inside context, but we still need a way to avoid consuming stale data
     <PostsContext>
       <Wrapper>
         <Sidebar>

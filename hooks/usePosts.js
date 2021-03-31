@@ -21,12 +21,17 @@ export function PostsContext({ children }) {
     }
   }
 
+  // https://github.com/kentcdodds/kentcdodds.com/blob/319db97260078ea4c263e75166f05e2cea21ccd1/content/blog/how-to-optimize-your-context-value/index.md
+  // prevent children components nested inside Provider from re-rendering when contextValue is updated.
   const contextValue = React.useMemo(() => ({
     posts,
     status,
     error,
     refetch,
   }))
+  // Without useMemo(), contextValue will be pointing at new object every time PostContext is re-rendered.
+  // This means that every component nested inside the Provider will be re-rendered
+  // even if the actual relevant values are unchanged.
 
   return <context.Provider value={contextValue}>{children}</context.Provider>
 }
@@ -34,6 +39,7 @@ export function PostsContext({ children }) {
 export default function usePosts() {
   const { posts, status, error, refetch } = React.useContext(context)
 
+  // refetch the data to avoid consuming stale global state
   React.useEffect(() => {
     refetch()
   }, [])
