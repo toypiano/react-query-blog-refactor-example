@@ -8,9 +8,11 @@ export function PostsContext({ children }) {
   const [error, setError] = React.useState()
   const [status, setStatus] = React.useState('loading')
 
+  // create ref to track the Promise of the outgoing request
   const activePromiseRef = React.useRef(false)
 
   const refetch = () => {
+    // only make request when there's no pending Promise
     if (!activePromiseRef.current) {
       activePromiseRef.current = (async () => {
         try {
@@ -28,6 +30,8 @@ export function PostsContext({ children }) {
       })()
     }
 
+    // If there's a pending Promise, use that one
+    // If we're dealing with multiple endpoint, we will need request id to do this.
     return activePromiseRef.current
   }
 
@@ -45,7 +49,7 @@ export default function usePosts() {
   const { posts, status, error, refetch } = React.useContext(context)
 
   React.useEffect(() => {
-    refetch()
+    refetch() // Now all duplicated requests will use the same Promise to resolve
   }, [])
 
   return {
