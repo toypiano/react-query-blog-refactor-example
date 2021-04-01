@@ -18,6 +18,7 @@ export default function PostForm({
   const handleSubmit = (e) => {
     setValues(defaultFormValues)
     e.preventDefault()
+    // this value is going to be passed to the mutationFn
     onSubmit(values)
   }
 

@@ -12,6 +12,8 @@ import useSavePost from '../hooks/useSavePost'
 import useDeletePost from '../hooks/useDeletePost'
 
 function App() {
+  // we can set activePostId to undefined to render Posts instead of individual Post!
+  // Using a single state to control not only the prop passed onto a component, but also which component to render.
   const [activePostId, setActivePostId] = React.useState()
 
   return (
@@ -71,6 +73,8 @@ function Posts({ setActivePostId }) {
                         <a
                           href="#"
                           onClick={() => setActivePostId(post.id)}
+                          // If cached post query is garbage collected after 5min,
+                          // refetch only that post when mouse is entered.
                           onMouseEnter={() => {
                             if (!queryCache.getQuery(['post', post.id])) {
                               queryCache.prefetchQuery(
@@ -91,6 +95,7 @@ function Posts({ setActivePostId }) {
                 ))}
               </div>
               <br />
+              {/* You do not call fetchMore with arguments unless you want them to override the fetchMoreInfo data returned from the getFetchMore function */}
               <button onClick={() => fetchMore()} disabled={!canFetchMore}>
                 {isFetchingMore
                   ? 'Loading more...'
@@ -125,13 +130,15 @@ function Posts({ setActivePostId }) {
 }
 
 function Post({ activePostId, setActivePostId }) {
+  // query hook
   const { status, data: post, error, isFetching } = usePost(activePostId)
+  // mutation hooks
   const [savePost, { status: savePostStatus }] = useSavePost()
   const [deletePost, { status: deletePostStatus }] = useDeletePost()
 
   const onDelete = async () => {
     deletePost(post.id)
-    setActivePostId()
+    setActivePostId() // set activePostId to undefined => Posts will be rendered instead of individual Post
   }
 
   return (
